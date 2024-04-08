@@ -18,4 +18,10 @@ class GameTest {
         assertTrue(newGame.getCoordinate(2).equal(new Coordinate(5, 1)));
         assertTrue(newGame.getCoordinate(3).equal(new Coordinate(5, 5)));
     }
+
+    @Test
+    void shouldThrowErrorWhenCoordinateIsNegative() {
+        Game newGame = new Game();
+        assertThrows(InvalidArgumentException.class, () -> newGame.addCoordinate(-1, 1));
+    }
 }
