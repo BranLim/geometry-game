@@ -24,4 +24,13 @@ class GameTest {
         Game newGame = new Game();
         assertThrows(InvalidArgumentException.class, () -> newGame.addCoordinate(-1, 1));
     }
+
+    @Test
+    void shouldReturnIncompleteShapeWhenNumberOfCoordinatesAreLessThanThree() {
+        Game newGame = new Game();
+        newGame.addCoordinate(1, 1);
+
+        assertTrue(newGame.getCoordinate(1).equal(new Coordinate(1, 1)));
+        assertFalse(newGame.isShapeCompleted());
+    }
 }

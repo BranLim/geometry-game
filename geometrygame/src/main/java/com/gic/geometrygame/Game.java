@@ -19,4 +19,8 @@ public class Game {
 
         return coordinates.get(coordinateNumber - 1);
     }
+
+    public boolean isShapeCompleted() {
+        return false;
+    }
 }
