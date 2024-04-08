@@ -8,7 +8,14 @@ class GameTest {
 
 
     @Test
-    void should() {
+    void shouldBeSuccessfulWhenGiven3ValidCoordinates() {
+        Game newGame = new Game();
+        newGame.addCoordinate(1, 1);
+        newGame.addCoordinate(5, 1);
+        newGame.addCoordinate(5, 5);
 
+        assertTrue(newGame.getCoordinate(1).equal(new Coordinate(1, 1)));
+        assertTrue(newGame.getCoordinate(2).equal(new Coordinate(5, 1)));
+        assertTrue(newGame.getCoordinate(3).equal(new Coordinate(5, 5)));
     }
 }
