@@ -12,7 +12,11 @@ public class Game {
         if (x < 0 || y < 0) {
             throw new InvalidArgumentException("Coordinate value cannot be negative");
         }
-        coordinates.add(new Coordinate(x, y));
+        Coordinate newCoordinate = new Coordinate(x, y);
+        if (coordinates.stream().anyMatch(coord -> coord.equals(newCoordinate))){
+            throw new InvalidArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
+        }
+        coordinates.add(newCoordinate);
     }
 
     public Coordinate getCoordinate(int coordinateNumber) {
@@ -23,4 +27,5 @@ public class Game {
     public boolean isShapeCompleted() {
         return false;
     }
+
 }

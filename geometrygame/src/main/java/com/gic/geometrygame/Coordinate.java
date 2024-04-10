@@ -10,7 +10,8 @@ public class Coordinate {
         this.y = y;
     }
 
-    public boolean equal(Coordinate other) {
+
+    public boolean equals(Coordinate other) {
         if (other == null) {
             return false;
         }
