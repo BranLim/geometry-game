@@ -23,6 +23,7 @@ class GameTest {
         assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
         assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
         assertTrue(newGame.getCoordinate(3).equals(new Coordinate(5, 5)));
+        assertTrue(newGame.isShapeComplete());
     }
 
     @Test
@@ -32,7 +33,7 @@ class GameTest {
 
         assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
         assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
-        assertFalse(newGame.isShapeFinalised());
+        assertFalse(newGame.isShapeComplete());
     }
 
     @Test
@@ -69,4 +70,20 @@ class GameTest {
         assertTrue(newGame.isShapeFinalised());
     }
 
+
+    @Test
+    void shoudlReturnFalseWhenGivenCoordinateIsNotWithinFinalisedShape() {
+        newGame.addCoordinate(1, 1);
+        newGame.addCoordinate(5, 1);
+        newGame.addCoordinate(5, 5);
+        newGame.finaliseShape();
+
+        boolean checkIShape = newGame.checkCoordinateInShape(0,2);
+
+        assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
+        assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
+        assertTrue(newGame.getCoordinate(3).equals(new Coordinate(5, 5)));
+        assertTrue(newGame.isShapeFinalised());
+        assertFalse(checkIShape);
+    }
 }

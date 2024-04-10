@@ -40,4 +40,12 @@ public class Game {
         }
         this.finalised = true;
     }
+
+    public boolean isShapeComplete() {
+        return this.coordinates.size() >= 3;
+    }
+
+    public boolean checkCoordinateInShape(int x, int y) {
+        return false;
+    }
 }
