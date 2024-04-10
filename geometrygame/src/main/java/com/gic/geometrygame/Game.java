@@ -35,17 +35,32 @@ public class Game {
     }
 
     public void finaliseShape() {
-        if (this.coordinates.size() < 3){
+        if (coordinates.size() < 3) {
             throw new IllegalStateException("Shape is incomplete");
         }
         this.finalised = true;
     }
 
     public boolean isShapeComplete() {
-        return this.coordinates.size() >= 3;
+        return coordinates.size() >= 3;
     }
 
     public boolean checkCoordinateInShape(int x, int y) {
-        return false;
+        boolean coordinateInShape = false;
+        int c = coordinates.size();
+        int j = c - 1;
+        for (int i = 0; i < c; i++) {
+            Coordinate coordinate1 = coordinates.get(i);
+            Coordinate coordinate2 = coordinates.get(j);
+            if ((coordinate1.getY() < y && coordinate2.getY() >= y
+                    || coordinate2.getY() < y && coordinate1.getY() >= y)
+                    && (coordinate1.getX() <= x || coordinate2.getX() <= x)) {
+                if (coordinate1.getX() + (y - coordinate1.getY()) / (coordinate2.getY() - coordinate1.getY()) * (coordinate2.getX() - coordinate1.getX()) < x) {
+                    coordinateInShape = !coordinateInShape;
+                }
+            }
+            j = i;
+        }
+        return coordinateInShape;
     }
 }

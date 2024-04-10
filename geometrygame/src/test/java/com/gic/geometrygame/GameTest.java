@@ -70,9 +70,8 @@ class GameTest {
         assertTrue(newGame.isShapeFinalised());
     }
 
-
     @Test
-    void shoudlReturnFalseWhenGivenCoordinateIsNotWithinFinalisedShape() {
+    void shouldReturnFalseWhenGivenCoordinateIsNotWithinFinalisedShape() {
         newGame.addCoordinate(1, 1);
         newGame.addCoordinate(5, 1);
         newGame.addCoordinate(5, 5);
@@ -85,5 +84,21 @@ class GameTest {
         assertTrue(newGame.getCoordinate(3).equals(new Coordinate(5, 5)));
         assertTrue(newGame.isShapeFinalised());
         assertFalse(checkIShape);
+    }
+
+    @Test
+    void shouldReturnTrueWhenGivenCoordinateIsWithinFinalisedShape() {
+        newGame.addCoordinate(1, 1);
+        newGame.addCoordinate(5, 1);
+        newGame.addCoordinate(5, 5);
+        newGame.finaliseShape();
+
+        boolean checkIShape = newGame.checkCoordinateInShape(2,2);
+
+        assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
+        assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
+        assertTrue(newGame.getCoordinate(3).equals(new Coordinate(5, 5)));
+        assertTrue(newGame.isShapeFinalised());
+        assertTrue(checkIShape);
     }
 }
