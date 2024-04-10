@@ -2,6 +2,7 @@ package com.gic.geometrygame;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Game {
 
@@ -13,13 +14,13 @@ public class Game {
         if (x < 0 || y < 0) {
             throw new IllegalArgumentException("Coordinate value cannot be negative");
         }
-        Coordinate newCoordinate = new Coordinate(x, y);
+        var newCoordinate = new Coordinate(x, y);
         if (coordinates.stream().anyMatch(coord -> coord.equals(newCoordinate))) {
             throw new IllegalArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
         }
-        List temp = new ArrayList<Coordinate>(coordinates);
+        var temp = new ArrayList<>(coordinates);
         temp.add(newCoordinate);
-        if (!IsConvex(temp)) {
+        if (!isConvex(temp)) {
             throw new IllegalArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
         }
         coordinates.add(newCoordinate);
@@ -64,7 +65,26 @@ public class Game {
         return coordinateInShape;
     }
 
-    private boolean IsConvex(List<Coordinate> coordinates) {
+    public void createRandomShape() {
+        int minCoord = 3;
+        int maxCoord = 8;
+
+        var random = new Random();
+        var newCoordinates = new ArrayList<Coordinate>();
+        int numberOfCoordinates = random.nextInt(maxCoord - minCoord + 1) + minCoord;
+        for (int i = 0; i < numberOfCoordinates; i++) {
+            newCoordinates.add(new Coordinate(getCoordinate(random), getCoordinate(random)));
+        }
+        while (!isConvex(newCoordinates)) {
+            for (int i = 0; i < numberOfCoordinates; i++) {
+                newCoordinates.set(i, new Coordinate(getCoordinate(random),
+                        getCoordinate(random)));
+            }
+        }
+        coordinates = newCoordinates;
+    }
+
+    private boolean isConvex(List<Coordinate> coordinates) {
         int n = coordinates.size();
         boolean isConvex = true;
         for (int i = 0; i < n; i++) {
@@ -80,5 +100,9 @@ public class Game {
             }
         }
         return true;
+    }
+
+    private int getCoordinate(Random random) {
+        return (int) random.nextDouble() * 10;
     }
 }

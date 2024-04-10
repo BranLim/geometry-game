@@ -107,4 +107,10 @@ class GameTest {
         assertTrue(newGame.isShapeFinalised());
         assertTrue(checkIShape);
     }
+
+    @Test
+    void shouldReturnARandomShape() {
+        newGame.createRandomShape();
+        assertTrue(newGame.isShapeComplete());
+    }
 }
