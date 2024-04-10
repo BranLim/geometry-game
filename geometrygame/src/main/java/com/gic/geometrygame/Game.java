@@ -11,20 +11,20 @@ public class Game {
 
     public void addCoordinate(int x, int y) {
         if (x < 0 || y < 0) {
-            throw new InvalidArgumentException("Coordinate value cannot be negative");
+            throw new IllegalArgumentException("Coordinate value cannot be negative");
         }
         Coordinate newCoordinate = new Coordinate(x, y);
         if (coordinates.stream().anyMatch(coord -> coord.equals(newCoordinate))) {
-            throw new InvalidArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
+            throw new IllegalArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
         }
-        if (coordinates.size() > 1) {
-            Coordinate prev = coordinates.get(coordinates.size() - 1);
-            if (prev.getX() != x && prev.getY() != y) {
-                throw new InvalidArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
-            }
+        List temp = new ArrayList<Coordinate>(coordinates);
+        temp.add(newCoordinate);
+        if (!IsConvex(temp)) {
+            throw new IllegalArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
         }
         coordinates.add(newCoordinate);
     }
+
 
     public Coordinate getCoordinate(int coordinateNumber) {
         return coordinates.get(coordinateNumber - 1);
@@ -62,5 +62,23 @@ public class Game {
             j = i;
         }
         return coordinateInShape;
+    }
+
+    private boolean IsConvex(List<Coordinate> coordinates) {
+        int n = coordinates.size();
+        boolean isConvex = true;
+        for (int i = 0; i < n; i++) {
+            int dx1 = coordinates.get((i + 2) % n).getX() - coordinates.get((i + 1) % n).getX();
+            int dy1 = coordinates.get((i + 2) % n).getY() - coordinates.get((i + 1) % n).getY();
+            int dx2 = coordinates.get(i).getX() - coordinates.get((i + 1) % n).getX();
+            int dy2 = coordinates.get(i).getY() - coordinates.get((i + 1) % n).getY();
+            int crossProduct = dx1 * dy2 - dy1 * dx2;
+            if (i == 0) {
+                isConvex = crossProduct > 0;
+            } else if ((crossProduct > 0 && !isConvex) || (crossProduct < 0 && isConvex)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

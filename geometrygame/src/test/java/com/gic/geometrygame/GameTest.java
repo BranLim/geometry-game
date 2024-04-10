@@ -14,17 +14,6 @@ class GameTest {
         newGame = new Game();
     }
 
-    @Test
-    void shouldBeSuccessfulWhenGiven3ValidCoordinates() {
-        newGame.addCoordinate(1, 1);
-        newGame.addCoordinate(5, 1);
-        newGame.addCoordinate(5, 5);
-
-        assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
-        assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
-        assertTrue(newGame.getCoordinate(3).equals(new Coordinate(5, 5)));
-        assertTrue(newGame.isShapeComplete());
-    }
 
     @Test
     void shouldReturnIncompleteShapeWhenOnlyTwoCoordinatesAdded() {
@@ -38,27 +27,43 @@ class GameTest {
 
     @Test
     void shouldThrowErrorWhenCoordinateIsNegative() {
-        assertThrows(InvalidArgumentException.class, () -> newGame.addCoordinate(-1, 1));
+        assertThrows(IllegalArgumentException.class, () -> newGame.addCoordinate(-1, 1));
     }
 
     @Test
     void shouldThrowErrorWhenCoordinateGivenRepeats() {
-        newGame.addCoordinate(4,2);
-        newGame.addCoordinate(2,2);
+        newGame.addCoordinate(4, 2);
+        newGame.addCoordinate(2, 2);
 
-        assertThrows(InvalidArgumentException.class, ()->newGame.addCoordinate(2,2));
+        assertThrows(IllegalArgumentException.class, () -> newGame.addCoordinate(2, 2));
     }
 
     @Test
-    void shouldThrowErrorWhenCoordinatesDoNotConnect() {
-        newGame.addCoordinate(4,2);
-        newGame.addCoordinate(2,2);
+    void shouldReturnCompleteShapeWhenGiven3ValidCoordinates() {
+        newGame.addCoordinate(1, 1);
+        newGame.addCoordinate(5, 1);
+        newGame.addCoordinate(5, 5);
 
-        assertThrows(InvalidArgumentException.class, ()->newGame.addCoordinate(5,3));
+        assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
+        assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
+        assertTrue(newGame.getCoordinate(3).equals(new Coordinate(5, 5)));
+        assertTrue(newGame.isShapeComplete());
     }
 
     @Test
-    void shouldReturnCompleteShapeWhenAddedAtLeastThreeCoordinatesAndGameIsFinalised() {
+    void shouldThrowAnErrorWhenGiven4CoordinatesThatGivesConcaveShape() {
+        newGame.addCoordinate(1, 1);
+        newGame.addCoordinate(3, 1);
+        newGame.addCoordinate(5, 5);
+
+        assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
+        assertTrue(newGame.getCoordinate(2).equals(new Coordinate(3, 1)));
+        assertTrue(newGame.getCoordinate(3).equals(new Coordinate(5, 5)));
+        assertThrows(IllegalArgumentException.class, () -> newGame.addCoordinate(4, 0));
+    }
+
+    @Test
+    void shouldReturnCompleteShapeWhenAddedAtLeastThreeValidCoordinatesAndGameIsFinalised() {
         newGame.addCoordinate(1, 1);
         newGame.addCoordinate(5, 1);
         newGame.addCoordinate(5, 5);
@@ -67,6 +72,7 @@ class GameTest {
         assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
         assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
         assertTrue(newGame.getCoordinate(3).equals(new Coordinate(5, 5)));
+        assertTrue(newGame.isShapeComplete());
         assertTrue(newGame.isShapeFinalised());
     }
 
@@ -77,7 +83,7 @@ class GameTest {
         newGame.addCoordinate(5, 5);
         newGame.finaliseShape();
 
-        boolean checkIShape = newGame.checkCoordinateInShape(0,2);
+        boolean checkIShape = newGame.checkCoordinateInShape(0, 2);
 
         assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
         assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
@@ -93,7 +99,7 @@ class GameTest {
         newGame.addCoordinate(5, 5);
         newGame.finaliseShape();
 
-        boolean checkIShape = newGame.checkCoordinateInShape(2,2);
+        boolean checkIShape = newGame.checkCoordinateInShape(2, 2);
 
         assertTrue(newGame.getCoordinate(1).equals(new Coordinate(1, 1)));
         assertTrue(newGame.getCoordinate(2).equals(new Coordinate(5, 1)));
