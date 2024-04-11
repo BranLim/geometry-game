@@ -6,8 +6,6 @@ import java.util.Scanner;
 
 public class Player {
 
-    private final String pattern = "\\d+ \\d+";
-
     private Scanner scanner = new Scanner(System.in);
     private PlayState state = PlayState.START;
 
@@ -28,7 +26,7 @@ public class Player {
                     handleCreateRandomShape(scanner, game);
                     break;
                 case PLAYING:
-                    handlePlayingState(scanner);
+                    handlePlayingState(scanner, game);
                     break;
                 case END:
                     quit = true;
@@ -44,7 +42,7 @@ public class Player {
 
         try {
             String value = scanner.nextLine();
-            if (value.equals("#")) {
+            if (InputValidator.isQuitInput(value)) {
                 state = PlayState.END;
                 return;
             }
@@ -69,14 +67,12 @@ public class Player {
         System.out.println(String.format("Please enter coordinate %d in x y format", game.getCoordinateCount() + 1));
         String value = scanner.nextLine();
 
-        if (!value.matches(pattern)) {
+        if (!InputValidator.isCoordinateInput(value)) {
             System.out.println("Invalid input.");
             return;
         }
 
-        int[] coordinates = Arrays.stream(value.split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+        int[] coordinates = getCoordinatesFromInput(value);
         try {
             game.addCoordinate(coordinates[0], coordinates[1]);
 
@@ -94,7 +90,28 @@ public class Player {
 
     }
 
-    private void handlePlayingState(Scanner scanner) {
+    private void handlePlayingState(Scanner scanner, Game game) {
+        System.out.println("Please key in test coordinates in x y format or enter # to quit the game");
+        String value = scanner.nextLine();
+        if (!InputValidator.isCoordinateInput(value) && !InputValidator.isQuitInput(value)) {
+            System.out.println("Invalid input.");
+            return;
+        }
 
+        if (value.equals("#")) {
+            state = PlayState.END;
+            return;
+        }
+
+        int coordinates[] = getCoordinatesFromInput(value);
+        if (game.checkCoordinateInShape(coordinates[0], coordinates[1])) {
+            System.out.println(String.format("Coordinates (%d %d) is within your finalized shape", coordinates[0], coordinates[1]));
+        }
+    }
+
+    private int[] getCoordinatesFromInput(String value) {
+        return Arrays.stream(value.split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
     }
 }
