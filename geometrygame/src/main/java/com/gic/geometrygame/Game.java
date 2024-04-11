@@ -109,4 +109,17 @@ public class Game {
     public int getCoordinateCount() {
         return coordinates.size();
     }
+
+    public String getShape() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < coordinates.size();i++){
+            Coordinate coord = coordinates.get(i);
+            builder.append(String.format("%d:", i+1))
+                    .append(String.format("(%d,%d)", coord.getX(), coord.getY()));
+            if (i < coordinates.size()-1){
+                builder.append("\n");
+            }
+        }
+        return builder.toString();
+    }
 }

@@ -89,7 +89,7 @@ public class Player {
     private void handleCreateRandomShape(Scanner scanner, Game game) {
         game.createRandomShape();
         System.out.println("Your random shape is");
-        //System.out.println(game.getCoordinates());
+        System.out.println(game.getShape());
         state = PlayState.PLAYING;
 
     }
