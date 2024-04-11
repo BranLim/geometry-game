@@ -105,4 +105,8 @@ public class Game {
     private int getCoordinate(Random random) {
         return (int) random.nextDouble() * 10;
     }
+
+    public int getCoordinateCount() {
+        return coordinates.size();
+    }
 }
