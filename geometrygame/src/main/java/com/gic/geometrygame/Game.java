@@ -15,9 +15,10 @@ public class Game {
             throw new IllegalArgumentException("Coordinate value cannot be negative");
         }
         var newCoordinate = new Coordinate(x, y);
-        if (coordinates.stream().anyMatch(coord -> coord.equals(newCoordinate))) {
+        if (isRepeatCoordinate(coordinates, newCoordinate)) {
             throw new IllegalArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
         }
+
         var temp = new ArrayList<>(coordinates);
         temp.add(newCoordinate);
         if (!isConvex(temp)) {
@@ -70,18 +71,49 @@ public class Game {
         int maxCoord = 8;
 
         var random = new Random();
-        var newCoordinates = new ArrayList<Coordinate>();
+        var newRandomShape = new ArrayList<Coordinate>();
         int numberOfCoordinates = random.nextInt(maxCoord - minCoord + 1) + minCoord;
         for (int i = 0; i < numberOfCoordinates; i++) {
-            newCoordinates.add(new Coordinate(getCoordinate(random), getCoordinate(random)));
+            var newCoordinate = getNewRandomCoordinate(random, newRandomShape);
+            newRandomShape.add(newCoordinate);
         }
-        while (!isConvex(newCoordinates)) {
+        while (!isConvex(newRandomShape)) {
             for (int i = 0; i < numberOfCoordinates; i++) {
-                newCoordinates.set(i, new Coordinate(getCoordinate(random),
-                        getCoordinate(random)));
+                var newCoordinate = getNewRandomCoordinate(random, newRandomShape);
+                newRandomShape.set(i, newCoordinate);
             }
         }
-        coordinates = newCoordinates;
+        coordinates = newRandomShape;
+    }
+
+    public int getCoordinateCount() {
+        return coordinates.size();
+    }
+
+    public String getShape() {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < coordinates.size(); i++) {
+            Coordinate coord = coordinates.get(i);
+            builder.append(String.format("%d:", i + 1))
+                    .append(String.format("(%d,%d)", coord.getX(), coord.getY()));
+            if (i < coordinates.size() - 1) {
+                builder.append("\n");
+            }
+        }
+        return builder.toString();
+    }
+
+    private Coordinate getNewRandomCoordinate(Random random, ArrayList<Coordinate> newRandomShape) {
+        var newCoordinate = new Coordinate(getCoordinate(random), getCoordinate(random));
+        while (isRepeatCoordinate(newRandomShape, newCoordinate)) {
+            newCoordinate = new Coordinate(getCoordinate(random), getCoordinate(random));
+        }
+        return newCoordinate;
+    }
+
+    private boolean isRepeatCoordinate(List<Coordinate> existingCoordinates, Coordinate newCoordinate) {
+        return existingCoordinates.stream().anyMatch(coord -> coord.equals(newCoordinate));
+
     }
 
     private boolean isConvex(List<Coordinate> coordinates) {
@@ -103,23 +135,8 @@ public class Game {
     }
 
     private int getCoordinate(Random random) {
-        return (int) random.nextDouble() * 10;
+        return (int) (random.nextDouble() * 10);
     }
 
-    public int getCoordinateCount() {
-        return coordinates.size();
-    }
 
-    public String getShape() {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < coordinates.size();i++){
-            Coordinate coord = coordinates.get(i);
-            builder.append(String.format("%d:", i+1))
-                    .append(String.format("(%d,%d)", coord.getX(), coord.getY()));
-            if (i < coordinates.size()-1){
-                builder.append("\n");
-            }
-        }
-        return builder.toString();
-    }
 }

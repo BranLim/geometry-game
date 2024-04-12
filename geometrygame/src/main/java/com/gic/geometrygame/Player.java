@@ -33,6 +33,8 @@ public class Player {
                     break;
             }
         }
+        showGoodBye();
+
     }
 
     private void handleMenu(Scanner scanner) {
@@ -106,6 +108,8 @@ public class Player {
         int coordinates[] = getCoordinatesFromInput(value);
         if (game.checkCoordinateInShape(coordinates[0], coordinates[1])) {
             System.out.println(String.format("Coordinates (%d %d) is within your finalized shape", coordinates[0], coordinates[1]));
+        }else {
+            System.out.println(String.format("Sorry, coordinates (%d %d) is outside of your finalized shape", coordinates[0], coordinates[1]));
         }
     }
 
@@ -113,5 +117,10 @@ public class Player {
         return Arrays.stream(value.split(" "))
                 .mapToInt(Integer::parseInt)
                 .toArray();
+    }
+
+    private void showGoodBye(){
+        System.out.println("Thank you for playing the GIC geometry puzzle app");
+        System.out.println("Have a nice day!");
     }
 }
