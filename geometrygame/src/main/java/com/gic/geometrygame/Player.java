@@ -44,7 +44,7 @@ public class Player {
 
         try {
             String value = scanner.nextLine();
-            if (InputValidator.isQuitInput(value)) {
+            if (InputValidator.isPoundInput(value)) {
                 state = PlayState.END;
                 return;
             }
@@ -65,10 +65,18 @@ public class Player {
     }
 
     private void handleShapeCreation(Scanner scanner, Game game) {
+        if (game.isShapeComplete()){
+            System.out.println(String.format("Please enter # to finalize your shape or enter coordinates %d in x y format",game.getCoordinateCount() + 1));
+        }else{
+            System.out.println(String.format("Please enter coordinate %d in x y format", game.getCoordinateCount() + 1));
+        }
 
-        System.out.println(String.format("Please enter coordinate %d in x y format", game.getCoordinateCount() + 1));
         String value = scanner.nextLine();
-
+        if (game.isShapeComplete() && InputValidator.isPoundInput(value)){
+            game.finaliseShape();
+            state = PlayState.PLAYING;
+            return;
+        }
         if (!InputValidator.isCoordinateInput(value)) {
             System.out.println("Invalid input.");
             return;
@@ -77,11 +85,16 @@ public class Player {
         int[] coordinates = getCoordinatesFromInput(value);
         try {
             game.addCoordinate(coordinates[0], coordinates[1]);
-
         } catch (IllegalArgumentException e) {
             System.out.println(String.format("New coordinates(%d, %d) is invalid!!!", coordinates[0], coordinates[1]));
+            System.out.println("Not adding new coordinates to the current shape.");
         }
-
+        if (game.isShapeComplete()){
+            System.out.println("Your current shape is valid and is complete");
+        }else{
+            System.out.println("Your current shape is incomplete");
+        }
+        System.out.println(game.getShape());
     }
 
     private void handleCreateRandomShape(Scanner scanner, Game game) {
@@ -89,13 +102,12 @@ public class Player {
         System.out.println("Your random shape is");
         System.out.println(game.getShape());
         state = PlayState.PLAYING;
-
     }
 
     private void handlePlayingState(Scanner scanner, Game game) {
         System.out.println("Please key in test coordinates in x y format or enter # to quit the game");
         String value = scanner.nextLine();
-        if (!InputValidator.isCoordinateInput(value) && !InputValidator.isQuitInput(value)) {
+        if (!InputValidator.isCoordinateInput(value) && !InputValidator.isPoundInput(value)) {
             System.out.println("Invalid input.");
             return;
         }

@@ -9,7 +9,7 @@ public class InputValidator {
         return value.matches(pattern);
     }
 
-    public static boolean isQuitInput(String value){
+    public static boolean isPoundInput(String value){
         return value.matches(quitGamePattern);
     }
 }
