@@ -19,5 +19,3 @@ Maven is used as the dependency and build tool.
 2. Run `mvn compile`
 3. Run `mvn package`
 4. Run `Java -jar target/geometrygame-0.0.1.jar` to start the game
-5. 
-
