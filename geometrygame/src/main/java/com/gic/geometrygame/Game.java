@@ -6,20 +6,20 @@ import java.util.Random;
 
 public class Game {
 
-    private List<Coordinate> coordinates = new ArrayList<>();
+    private Shape shape = new Shape();
     private boolean finalised;
 
 
     public void addCoordinate(int x, int y) {
         checkCoordinateIsPositive(x, y);
-        checkRepeatCoordinate(coordinates, x, y);
+        checkRepeatCoordinate(shape.getCoordinates(), x, y);
         var newCoordinate = new Coordinate(x, y);
-        var temp = new ArrayList<>(coordinates);
+        var temp = new ArrayList<>(shape.getCoordinates());
         temp.add(newCoordinate);
         if (!isConvex(temp)) {
             throw new IllegalArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
         }
-        coordinates.add(newCoordinate);
+        shape.addPoint(newCoordinate);
     }
 
     private void checkCoordinateIsPositive(int x, int y) {
@@ -29,7 +29,7 @@ public class Game {
     }
 
     public Coordinate getCoordinate(int coordinateNumber) {
-        return coordinates.get(coordinateNumber - 1);
+        return shape.getPointAt(coordinateNumber);
     }
 
     public boolean isShapeFinalised() {
@@ -37,23 +37,23 @@ public class Game {
     }
 
     public void finaliseShape() {
-        if (coordinates.size() < 3) {
+        if (shape.getCoordinates().size() < 3) {
             throw new IllegalStateException("Shape is incomplete");
         }
         this.finalised = true;
     }
 
     public boolean isShapeComplete() {
-        return coordinates.size() >= 3;
+        return shape.getCoordinates().size() >= 3;
     }
 
     public boolean checkCoordinateInShape(int x, int y) {
         boolean coordinateInShape = false;
-        int c = coordinates.size();
+        int c = shape.getCoordinates().size();
         int j = c - 1;
         for (int i = 0; i < c; i++) {
-            Coordinate coordinate1 = coordinates.get(i);
-            Coordinate coordinate2 = coordinates.get(j);
+            Coordinate coordinate1 = shape.getCoordinates().get(i);
+            Coordinate coordinate2 = shape.getCoordinates().get(j);
             if ((coordinate1.getY() < y && coordinate2.getY() >= y
                     || coordinate2.getY() < y && coordinate1.getY() >= y)
                     && (coordinate1.getX() <= x || coordinate2.getX() <= x)) {
@@ -83,20 +83,20 @@ public class Game {
                 newRandomShape.set(i, newCoordinate);
             }
         }
-        coordinates = newRandomShape;
+        shape.setCoordinates(newRandomShape);
     }
 
     public int getCoordinateCount() {
-        return coordinates.size();
+        return shape.getCoordinates().size();
     }
 
     public String getShape() {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < coordinates.size(); i++) {
-            Coordinate coord = coordinates.get(i);
+        for (int i = 0; i < shape.getCoordinates().size(); i++) {
+            Coordinate coord = shape.getCoordinates().get(i);
             builder.append(String.format("%d:", i + 1))
                     .append(String.format("(%d,%d)", coord.getX(), coord.getY()));
-            if (i < coordinates.size() - 1) {
+            if (i < shape.getCoordinates().size() - 1) {
                 builder.append("\n");
             }
         }
