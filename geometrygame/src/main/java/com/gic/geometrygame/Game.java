@@ -11,14 +11,9 @@ public class Game {
 
 
     public void addCoordinate(int x, int y) {
-        if (x < 0 || y < 0) {
-            throw new IllegalArgumentException("Coordinate value cannot be negative");
-        }
+        checkCoordinateIsPositive(x, y);
+        checkRepeatCoordinate(coordinates, x, y);
         var newCoordinate = new Coordinate(x, y);
-        if (isRepeatCoordinate(coordinates, newCoordinate)) {
-            throw new IllegalArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
-        }
-
         var temp = new ArrayList<>(coordinates);
         temp.add(newCoordinate);
         if (!isConvex(temp)) {
@@ -27,6 +22,11 @@ public class Game {
         coordinates.add(newCoordinate);
     }
 
+    private void checkCoordinateIsPositive(int x, int y) {
+        if (x < 0 || y < 0) {
+            throw new IllegalArgumentException("Coordinate value cannot be negative");
+        }
+    }
 
     public Coordinate getCoordinate(int coordinateNumber) {
         return coordinates.get(coordinateNumber - 1);
@@ -104,16 +104,24 @@ public class Game {
     }
 
     private Coordinate getNewRandomCoordinate(Random random, ArrayList<Coordinate> newRandomShape) {
-        var newCoordinate = new Coordinate(getCoordinate(random), getCoordinate(random));
-        while (isRepeatCoordinate(newRandomShape, newCoordinate)) {
-            newCoordinate = new Coordinate(getCoordinate(random), getCoordinate(random));
+        int x = getCoordinate(random);
+        int y = getCoordinate(random);
+        while (true) {
+            try {
+                checkRepeatCoordinate(newRandomShape, x, y);
+                break;
+            } catch (IllegalArgumentException e) {
+                x = getCoordinate(random);
+                y = getCoordinate(random);
+            }
         }
-        return newCoordinate;
+        return new Coordinate(x, y);
     }
 
-    private boolean isRepeatCoordinate(List<Coordinate> existingCoordinates, Coordinate newCoordinate) {
-        return existingCoordinates.stream().anyMatch(coord -> coord.equals(newCoordinate));
-
+    private void checkRepeatCoordinate(List<Coordinate> existingCoordinates, int x, int y) {
+        if (existingCoordinates.stream().anyMatch(coord -> coord.equals(new Coordinate(x, y)))) {
+            throw new IllegalArgumentException(String.format("New coordinates(%d,%d) is invalid!!!", x, y));
+        }
     }
 
     private boolean isConvex(List<Coordinate> coordinates) {
